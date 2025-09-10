@@ -71,6 +71,7 @@ namespace Common
         [DataMember]
         public float Frequency_Max_Hz { get; set; }
 
+
         public Sample
             (
             string timestamp, 
@@ -94,35 +95,7 @@ namespace Common
             string frequency_Max_Hz
             )
         {
-            OperationResult or = validateSample
-                (
-                 timestamp,
-                 voltage_RMS_Min,
-                 voltage_RMS_Avg,
-                 voltage_RMS_Max,
-                 current_RMS_Min_A,
-                 current_RMS_Avg_A,
-                 current_RMS_Max_A,
-                 real_Power_Min_kW,
-                 real_Power_Avg_kW,
-                 real_Power_Max_kW,
-                 reactive_Power_Min_kVAR,
-                 reactive_Power_Avg_kVAR,
-                 reactive_Power_Max_kVAR,
-                 apparent_Power_Min_kVA,
-                 apparent_Power_Avg_kVA,
-                 apparent_Power_Max_kVA,
-                 frequency_Min_Hz,
-                 frequency_Avg_Hz,
-                 frequency_Max_Hz
-                );
-            if(or.ResultType == ResultType.Failed)
-            {
-                Console.WriteLine("Nauspesno Kreiran uzorak!");
-               
-            }
-            else
-            {
+
                 Timestamp = DateTime.ParseExact(timestamp, "yyyy/MM/dd HH:mm:ss", CultureInfo.InvariantCulture);
 
 
@@ -151,8 +124,7 @@ namespace Common
                 Frequency_Max_Hz = float.Parse(frequency_Max_Hz, CultureInfo.InvariantCulture);
                 
                 Console.WriteLine("Uspesno kreiran uzorak!");
-            }
-           
+
         }
 
         OperationResult validateSample(params string[] parametrs )
@@ -204,5 +176,17 @@ namespace Common
 
             return true;
         }
+
+        public override string ToString()
+        {
+            return $"Timestamp: {Timestamp:yyyy/MM/dd HH:mm:ss}, " +
+                   $"Voltage_RMS_Min: {Voltage_RMS_Min}, Voltage_RMS_Avg: {Voltage_RMS_Avg}, Voltage_RMS_Max: {Voltage_RMS_Max}, " +
+                   $"Current_RMS_Min_A: {Current_RMS_Min_A}, Current_RMS_Avg_A: {Current_RMS_Avg_A}, Current_RMS_Max_A: {Current_RMS_Max_A}, " +
+                   $"Real_Power_Min_kW: {Real_Power_Min_kW}, Real_Power_Avg_kW: {Real_Power_Avg_kW}, Real_Power_Max_kW: {Real_Power_Max_kW}, " +
+                   $"Reactive_Power_Min_kVAR: {Reactive_Power_Min_kVAR}, Reactive_Power_Avg_kVAR: {Reactive_Power_Avg_kVAR}, Reactive_Power_Max_kVAR: {Reactive_Power_Max_kVAR}, " +
+                   $"Apparent_Power_Min_kVA: {Apparent_Power_Min_kVA}, Apparent_Power_Avg_kVA: {Apparent_Power_Avg_kVA}, Apparent_Power_Max_kVA: {Apparent_Power_Max_kVA}, " +
+                   $"Frequency_Min_Hz: {Frequency_Min_Hz}, Frequency_Avg_Hz: {Frequency_Avg_Hz}, Frequency_Max_Hz: {Frequency_Max_Hz}";
+        }
+
     }
 }

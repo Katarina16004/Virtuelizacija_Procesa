@@ -17,14 +17,12 @@ namespace Common
         [DataMember]
         public int VehicleId { get; set; }
 
-        public Sample sample { get; set; }
         public MemoryStream ms { get; set; }
 
-        public FileWritterOptions(int rowIndex, int vehicleId, Sample sample, MemoryStream ms)
+        public FileWritterOptions(int rowIndex, int vehicleId, MemoryStream ms)
         {
             RowIndex = rowIndex;
             VehicleId = vehicleId;
-            this.sample = sample;
             this.ms = ms;
         }
 

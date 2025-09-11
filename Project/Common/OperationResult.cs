@@ -24,6 +24,13 @@ namespace Common
         {
             ResultType = ResultType.Success;
         }
+
+        public OperationResult(ResultType resultType, string resultMessage)
+        {
+            ResultMessage = resultMessage;
+            ResultType = resultType;
+        }
+
         [DataMember]
         public string ResultMessage { get; set; }
         [DataMember]

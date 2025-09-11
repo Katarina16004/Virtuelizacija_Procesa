@@ -11,13 +11,13 @@ namespace Common
     public interface ISessionService
     {
         [OperationContract]
-        OperationResult StartSession(int VehicleId);
+        OperationResult StartSession(int vehicleID);
         
         [OperationContract]
         [FaultContract(typeof(CustomException))]
         OperationResult PushSample(FileWritterOptions fw);
         
         [OperationContract]
-        OperationResult EndSession(int VehicleId);
+        void EndSession();
     }
 }

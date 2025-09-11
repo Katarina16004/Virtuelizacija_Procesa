@@ -127,7 +127,7 @@ namespace Common
 
         }
 
-        OperationResult validateSample(params string[] parametrs )
+        public static OperationResult validateSample(params string[] parametrs )
         {
             OperationResult or = new OperationResult();
             if(parametrs.Length != 19)
@@ -161,7 +161,7 @@ namespace Common
 
         }
 
-        bool CheckNumber(string value, bool mustBePositive)
+        static bool CheckNumber(string value, bool mustBePositive)
         {
             if (!double.TryParse(value, NumberStyles.Any, CultureInfo.InvariantCulture, out double result))
             {

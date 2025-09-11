@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 namespace Common
 {
     [DataContract]
-    public class FileWritterOptions :IDisposable
+    public class FileWritterOptions
     {
         [DataMember]
         public int RowIndex { get; set; }
@@ -17,20 +17,15 @@ namespace Common
         [DataMember]
         public int VehicleId { get; set; }
 
-        public MemoryStream ms { get; set; }
+        [DataMember]
+        public string line { get; set; }
 
-        public FileWritterOptions(int rowIndex, int vehicleId, MemoryStream ms)
+        public FileWritterOptions(int rowIndex, int vehicleId, string line)
         {
             RowIndex = rowIndex;
             VehicleId = vehicleId;
-            this.ms = ms;
+            this.line = line;
         }
 
-        public void Dispose()
-        {
-            if (ms == null) return;
-            ms.Dispose();
-            ms = null;
-        }
     }
 }

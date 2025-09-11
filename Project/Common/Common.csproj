@@ -44,7 +44,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CustomException.cs" />
-    <Compile Include="FileWritterOptions.cs" />
     <Compile Include="Logger.cs" />
     <Compile Include="OperationResult.cs" />
     <Compile Include="ISessionService.cs" />

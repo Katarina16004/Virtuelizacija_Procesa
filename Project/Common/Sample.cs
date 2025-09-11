@@ -15,6 +15,12 @@ namespace Common
         public Sample() { }
 
         [DataMember]
+        public int vehicleId { get; set; }
+
+        [DataMember]
+        public int RowIndex { get; set; }
+
+        [DataMember]
         public DateTime Timestamp { get; set; }
 
         [DataMember]
@@ -74,6 +80,8 @@ namespace Common
 
         public Sample
             (
+            int vehicleId,
+            int rowIndex,
             string timestamp, 
             string voltage_RMS_Min, 
             string voltage_RMS_Avg, 
@@ -95,35 +103,37 @@ namespace Common
             string frequency_Max_Hz
             )
         {
+            this.vehicleId = vehicleId;
+            
+            this.RowIndex = rowIndex;
 
-                Timestamp = DateTime.ParseExact(timestamp, "yyyy/MM/dd HH:mm:ss", CultureInfo.InvariantCulture);
+            Timestamp = DateTime.ParseExact(timestamp, "yyyy/MM/dd HH:mm:ss", CultureInfo.InvariantCulture);
 
 
-                Voltage_RMS_Min = float.Parse(voltage_RMS_Min, CultureInfo.InvariantCulture);
-                Voltage_RMS_Avg = float.Parse(voltage_RMS_Avg, CultureInfo.InvariantCulture);
-                Voltage_RMS_Max = float.Parse(voltage_RMS_Max, CultureInfo.InvariantCulture);
+            Voltage_RMS_Min = float.Parse(voltage_RMS_Min, CultureInfo.InvariantCulture);
+            Voltage_RMS_Avg = float.Parse(voltage_RMS_Avg, CultureInfo.InvariantCulture);
+            Voltage_RMS_Max = float.Parse(voltage_RMS_Max, CultureInfo.InvariantCulture);
 
-                Current_RMS_Min_A = float.Parse(current_RMS_Min_A, CultureInfo.InvariantCulture);
-                Current_RMS_Avg_A = float.Parse(current_RMS_Avg_A, CultureInfo.InvariantCulture);
-                Current_RMS_Max_A = float.Parse(current_RMS_Max_A, CultureInfo.InvariantCulture);
+            Current_RMS_Min_A = float.Parse(current_RMS_Min_A, CultureInfo.InvariantCulture);
+            Current_RMS_Avg_A = float.Parse(current_RMS_Avg_A, CultureInfo.InvariantCulture);
+            Current_RMS_Max_A = float.Parse(current_RMS_Max_A, CultureInfo.InvariantCulture);
 
-                Real_Power_Min_kW = float.Parse(real_Power_Min_kW, CultureInfo.InvariantCulture);
-                Real_Power_Avg_kW = float.Parse(real_Power_Avg_kW, CultureInfo.InvariantCulture);
-                Real_Power_Max_kW = float.Parse(real_Power_Max_kW, CultureInfo.InvariantCulture);
+            Real_Power_Min_kW = float.Parse(real_Power_Min_kW, CultureInfo.InvariantCulture);
+            Real_Power_Avg_kW = float.Parse(real_Power_Avg_kW, CultureInfo.InvariantCulture);
+            Real_Power_Max_kW = float.Parse(real_Power_Max_kW, CultureInfo.InvariantCulture);
 
-                Reactive_Power_Min_kVAR = float.Parse(reactive_Power_Min_kVAR, CultureInfo.InvariantCulture);
-                Reactive_Power_Avg_kVAR = float.Parse(reactive_Power_Avg_kVAR, CultureInfo.InvariantCulture);
-                Reactive_Power_Max_kVAR = float.Parse(reactive_Power_Max_kVAR, CultureInfo.InvariantCulture);
+            Reactive_Power_Min_kVAR = float.Parse(reactive_Power_Min_kVAR, CultureInfo.InvariantCulture);
+            Reactive_Power_Avg_kVAR = float.Parse(reactive_Power_Avg_kVAR, CultureInfo.InvariantCulture);
+            Reactive_Power_Max_kVAR = float.Parse(reactive_Power_Max_kVAR, CultureInfo.InvariantCulture);
 
-                Apparent_Power_Min_kVA = float.Parse(apparent_Power_Min_kVA, CultureInfo.InvariantCulture);
-                Apparent_Power_Avg_kVA = float.Parse(apparent_Power_Avg_kVA, CultureInfo.InvariantCulture);
-                Apparent_Power_Max_kVA = float.Parse(apparent_Power_Max_kVA, CultureInfo.InvariantCulture);
+            Apparent_Power_Min_kVA = float.Parse(apparent_Power_Min_kVA, CultureInfo.InvariantCulture);
+            Apparent_Power_Avg_kVA = float.Parse(apparent_Power_Avg_kVA, CultureInfo.InvariantCulture);
+            Apparent_Power_Max_kVA = float.Parse(apparent_Power_Max_kVA, CultureInfo.InvariantCulture);
 
-                Frequency_Min_Hz = float.Parse(frequency_Min_Hz, CultureInfo.InvariantCulture);
-                Frequency_Avg_Hz = float.Parse(frequency_Avg_Hz, CultureInfo.InvariantCulture);
-                Frequency_Max_Hz = float.Parse(frequency_Max_Hz, CultureInfo.InvariantCulture);
+            Frequency_Min_Hz = float.Parse(frequency_Min_Hz, CultureInfo.InvariantCulture);
+            Frequency_Avg_Hz = float.Parse(frequency_Avg_Hz, CultureInfo.InvariantCulture);
+            Frequency_Max_Hz = float.Parse(frequency_Max_Hz, CultureInfo.InvariantCulture);
                 
-                Console.WriteLine("Uspesno kreiran uzorak!");
 
         }
 
@@ -179,14 +189,28 @@ namespace Common
 
         public override string ToString()
         {
-            return $"Timestamp: {Timestamp:yyyy/MM/dd HH:mm:ss}, " +
-                   $"Voltage_RMS_Min: {Voltage_RMS_Min}, Voltage_RMS_Avg: {Voltage_RMS_Avg}, Voltage_RMS_Max: {Voltage_RMS_Max}, " +
-                   $"Current_RMS_Min_A: {Current_RMS_Min_A}, Current_RMS_Avg_A: {Current_RMS_Avg_A}, Current_RMS_Max_A: {Current_RMS_Max_A}, " +
-                   $"Real_Power_Min_kW: {Real_Power_Min_kW}, Real_Power_Avg_kW: {Real_Power_Avg_kW}, Real_Power_Max_kW: {Real_Power_Max_kW}, " +
-                   $"Reactive_Power_Min_kVAR: {Reactive_Power_Min_kVAR}, Reactive_Power_Avg_kVAR: {Reactive_Power_Avg_kVAR}, Reactive_Power_Max_kVAR: {Reactive_Power_Max_kVAR}, " +
-                   $"Apparent_Power_Min_kVA: {Apparent_Power_Min_kVA}, Apparent_Power_Avg_kVA: {Apparent_Power_Avg_kVA}, Apparent_Power_Max_kVA: {Apparent_Power_Max_kVA}, " +
-                   $"Frequency_Min_Hz: {Frequency_Min_Hz}, Frequency_Avg_Hz: {Frequency_Avg_Hz}, Frequency_Max_Hz: {Frequency_Max_Hz}";
+            return string.Join(",",
+           RowIndex,
+           vehicleId,
+           Timestamp.ToString("yyyy-MM-dd HH:mm:ss"),
+           Voltage_RMS_Min.ToString(),
+           Voltage_RMS_Avg.ToString(),
+           Voltage_RMS_Max.ToString(),
+           Current_RMS_Min_A.ToString(),
+           Current_RMS_Avg_A.ToString(),
+           Current_RMS_Max_A.ToString(),
+           Real_Power_Min_kW.ToString(),
+           Real_Power_Avg_kW.ToString(),
+           Real_Power_Max_kW.ToString(),
+           Reactive_Power_Min_kVAR.ToString(),
+           Reactive_Power_Avg_kVAR.ToString(),
+           Reactive_Power_Max_kVAR.ToString(),
+           Apparent_Power_Min_kVA.ToString(),
+           Apparent_Power_Avg_kVA.ToString(),
+           Apparent_Power_Max_kVA.ToString(),
+           Frequency_Min_Hz.ToString(),
+           Frequency_Avg_Hz.ToString(),
+           Frequency_Max_Hz.ToString());
         }
-
     }
 }

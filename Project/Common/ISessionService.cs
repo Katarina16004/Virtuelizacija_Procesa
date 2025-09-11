@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.ServiceModel;
 using System.Text;
@@ -15,7 +16,7 @@ namespace Common
         
         [OperationContract]
         [FaultContract(typeof(CustomException))]
-        OperationResult PushSample(FileWritterOptions fw);
+        OperationResult PushSample(Sample sample);
         
         [OperationContract]
         void EndSession();

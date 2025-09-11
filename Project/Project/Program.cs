@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -23,13 +24,16 @@ namespace Project
             ChannelFactory<ISessionService> factory =new ChannelFactory<ISessionService>("SessionService");
             Console.WriteLine("Welcome to Client!");
 
+            Thread.Sleep(1500);
+
             int selected_vehicle = 0;
             do
             {
                 selected_vehicle = ShowAllEV();
                 if(selected_vehicle == 12)
                 {
-                    Console.WriteLine("Closing program");
+                    Console.WriteLine("Program closed!");
+                    Logger.Dispose();
                     break;
                 } 
 
@@ -42,8 +46,6 @@ namespace Project
                 SendSamples(selected_vehicle);
 
                 service.EndSession();
-                Console.WriteLine("Session ended successfully!");
-                Thread.Sleep(1000);
             }
             while (selected_vehicle != 12);
 
@@ -68,7 +70,6 @@ namespace Project
             folders.Add("EXIT");
             int index = 0;
             ConsoleKey key;
-            Thread.Sleep(1500);
             do
             {
                 Console.Clear();
@@ -110,39 +111,53 @@ namespace Project
 
         public static void SendSamples(int selected_vehicle)
         {
-            int roxIndex = -1;
             try
             {
-                using (FileStream fs = new FileStream(filePath, FileMode.Open, FileAccess.Read))
+                using (var sr = new StreamReader(filePath))
                 {
-                    using (StreamReader sr = new StreamReader(fs))
-                    {
-                        sr.ReadLine();//Headers
+                    string line;
+                    int rowIndex = 0;
 
-                        string line;
-                        while ((line = sr.ReadLine()) != null)
+                    while ((line = sr.ReadLine()) != null)
+                    {
+                        rowIndex++;
+                        var fields = line.Split(',');
+
+
+                        bool valid = true;
+                        for (int i = 1; i < fields.Length; i++)
                         {
-                            Console.WriteLine("Poslao sam liniju:" + line);
-                            FileWritterOptions fw = new FileWritterOptions( ++roxIndex, selected_vehicle, line);
-                            OperationResult or = service.PushSample(fw);
-                            if (or.ResultType == ResultType.Success)
+                            if (!double.TryParse(fields[i], NumberStyles.Any, CultureInfo.InvariantCulture, out _))
                             {
-                                Console.WriteLine("Data transmitted successfully!");
-                            }
-                            else
-                            {
-                                Console.WriteLine("Error: " + or.ResultMessage);
+                                Console.WriteLine($"Invalid number at line {rowIndex}, column {i}: {fields[i]}");
+                                valid = false;
+                                Logger.Log(line);
+                                break;
                             }
                         }
 
+                        if (!valid) continue;
+
+
+                        Sample sample = new Sample(selected_vehicle, rowIndex, fields[0], fields[1], fields[2], fields[3], fields[4], fields[5], fields[6],
+                            fields[7], fields[8], fields[9], fields[10], fields[11], fields[12], fields[13], fields[14], fields[15], fields[16], fields[17], fields[18]);
+
+                        var result = service.PushSample(sample);
+
+                        if (result.ResultType == ResultType.Failed)
+                        {
+                            Console.WriteLine($"Server rejected line {rowIndex}: {result.ResultMessage}");
+                        }
                     }
                 }
-
+                Console.WriteLine("Press ENTER to continue");
+                Console.ReadKey();
             }
-            catch(Exception ex)
-            {   
-                Console.WriteLine(ex.Message);
-            }   
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error sending CSV lines: " + ex.Message);
+                Console.ReadKey(); 
+            }
         }
     }
 }

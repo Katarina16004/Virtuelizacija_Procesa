@@ -13,15 +13,27 @@ namespace Common
         public static string fileName { get; set; }
 
         public static DateTime date { get; set; }
-        public static Sample sample { get; set; }
+        public static string sample { get; set; }
 
-        public static void Log(string file, Sample sample)
+        private static StreamWriter sw;
+        static Logger()
         {
-            date = DateTime.Now;
-            using(FileStream fs = new FileStream(file, FileMode.Append, FileAccess.ReadWrite))
+            FileStream fs = new FileStream("Log.csv", FileMode.Create, FileAccess.ReadWrite);
+             sw = new StreamWriter(fs);
+        }
+        public static void Log(string sample)
+        {
+            date = DateTime.Now;    
+            sw.WriteLine(date.ToString("yyyy/MM/dd HH:mm:ss =>") + sample);
+            sw.Flush();
+        }
+
+        public static void Dispose()
+        {
+            if(sw != null)
             {
-                StreamWriter sw = new StreamWriter(fs);
-                sw.WriteLine(date.ToString("yyyy/MM/dd HH:mm:ss =>") + sample.ToString());
+                sw.Dispose();
+                sw = null;
             }
         }
     }

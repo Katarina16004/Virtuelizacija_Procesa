@@ -12,6 +12,14 @@ namespace Server
 {
     public class SessionService : ISessionService
     {
+        public delegate void EventHandler(object sender, SampleEventArgs e);
+
+
+        public static event EventHandler OnTransferStarted;
+        public static event EventHandler OnSampleReceived;
+        public static event EventHandler OnTransferCompleted;
+        public static event EventHandler OnWarningRaised;
+
         private static StreamWriter sw;
         private static StreamWriter rejected;
         private static int vehicleID;
@@ -31,6 +39,8 @@ namespace Server
                 rejected = null;
             }
             Console.WriteLine("Transfer finished!");
+            if (OnTransferCompleted != null)
+                OnTransferCompleted(this, new SampleEventArgs(vehicleID, 0, "Transfer started"));
         }
 
         public OperationResult PushSample(Sample sample)
@@ -80,12 +90,18 @@ namespace Server
                 {
                     sw.WriteLine(sample.ToString());
                     sw.Flush();
+
+                    if (OnSampleReceived != null)
+                        OnSampleReceived(this, new SampleEventArgs(sample.vehicleId, sample.RowIndex, "Sample received"));
                 }
                 else
                 {
                     rejected.WriteLine($"Invalid sample: {sample.ToString()}");
                     rejected.WriteLine($"Reason: {result.ResultMessage}");
                     rejected.Flush();
+
+                    if (OnWarningRaised != null)
+                        OnWarningRaised(this, new SampleEventArgs(sample.vehicleId, sample.RowIndex, "Sample rejected"));
                 }
             }
             catch (Exception ex)
@@ -120,7 +136,10 @@ namespace Server
                 {
                     or.ResultType = ResultType.Success;
                     or.ResultMessage = "Transfer Started!";
-                   
+
+                    if (OnTransferStarted != null)
+                        OnTransferStarted(this, new SampleEventArgs(vehicleID, 0, "Transfer finished"));
+
                     return or;
                 }
 

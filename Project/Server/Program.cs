@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Common;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.ServiceModel;
@@ -12,6 +13,14 @@ namespace Server
         static void Main(string[] args)
         {
             ServiceHost host = new ServiceHost(typeof(SessionService));
+
+            SampleListener listener = new SampleListener();
+
+            SessionService.OnTransferStarted += listener.OnSampleEvent;
+            SessionService.OnSampleReceived += listener.OnSampleEvent;
+            SessionService.OnTransferCompleted += listener.OnSampleEvent;
+            SessionService.OnWarningRaised += listener.OnSampleEvent;
+
             Console.WriteLine("Welcome to Server!");
             host.Open();
             Console.ReadKey();

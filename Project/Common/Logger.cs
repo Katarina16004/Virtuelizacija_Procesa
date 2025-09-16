@@ -27,6 +27,12 @@ namespace Common
             sw.WriteLine(date.ToString("yyyy/MM/dd HH:mm:ss =>") + sample);
             sw.Flush();
         }
+        public static void LogEvent(string message)
+        {
+            date = DateTime.Now;
+            sw.WriteLine(date.ToString("yyyy/MM/dd HH:mm:ss --EVENT-- => ") + message);
+            sw.Flush();
+        }
 
         public static void Dispose()
         {

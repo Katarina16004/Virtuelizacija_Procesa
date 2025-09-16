@@ -16,6 +16,7 @@ namespace Server
 
         public static event EventHandler VoltageSpike;
         public static event EventHandler CurrentSpike;
+        public static event EventHandler PowerFactorWarning;
 
         public static event EventHandler OnTransferStarted;
         public static event EventHandler OnSampleReceived;
@@ -30,6 +31,7 @@ namespace Server
         private static Sample previousSample=null;
         const float VoltageSpikeConst = 0.1f;
         const float CurrentSpikeConst = 0.1f;
+        const float PowerFactorConst = 1f;
 
 
         public void EndSession()
@@ -98,24 +100,11 @@ namespace Server
 
                     if (previousSample != null)
                     {
-                        float deltaV = Math.Abs(sample.Voltage_RMS_Avg - previousSample.Voltage_RMS_Avg);
-                        float deltaI = Math.Abs(sample.Current_RMS_Avg_A - previousSample.Current_RMS_Avg_A);
-
-
-                        if (deltaV > VoltageSpikeConst)
-                        {
-                            if(VoltageSpike!=null)
-                                VoltageSpike(this, new SampleEventArgs(sample.vehicleId, sample.RowIndex, $"Voltage spike detected deltaV={deltaV}"));
-                        }
-
-                        if (deltaI > CurrentSpikeConst)
-                        {
-                            if(CurrentSpike!=null) 
-                                CurrentSpike(this, new SampleEventArgs(sample.vehicleId, sample.RowIndex, $"Current spike detected deltaI={deltaI}"));
-                        }
+                        CheckSpikes(sample);
                     }
 
                     previousSample = sample;
+                    AnalyzePowerFactor(sample);
 
                     if (OnSampleReceived != null)
                         OnSampleReceived(this, new SampleEventArgs(sample.vehicleId, sample.RowIndex, "Sample received"));
@@ -180,6 +169,34 @@ namespace Server
                 return or;
             }
             
+        }
+        private void CheckSpikes(Sample sample)
+        {
+            float deltaV = Math.Abs(sample.Voltage_RMS_Avg - previousSample.Voltage_RMS_Avg);
+            float deltaI = Math.Abs(sample.Current_RMS_Avg_A - previousSample.Current_RMS_Avg_A);
+
+            if (deltaV > VoltageSpikeConst && VoltageSpike != null)
+            {
+                VoltageSpike(this, new SampleEventArgs(sample.vehicleId, sample.RowIndex, $"Voltage spike detected deltaV={deltaV}"));
+            }
+
+            if (deltaI > CurrentSpikeConst && CurrentSpike != null)
+            {
+                CurrentSpike(this, new SampleEventArgs(sample.vehicleId, sample.RowIndex, $"Current spike detected deltaI={deltaI}"));
+            }
+        }
+        private void AnalyzePowerFactor(Sample sample)
+        {
+            if (sample.Apparent_Power_Avg_kVA == 0) 
+                return; 
+
+            float pf = (float)(sample.Real_Power_Avg_kW / sample.Apparent_Power_Avg_kVA);
+
+            if (pf < PowerFactorConst)
+            {
+                if (PowerFactorWarning!=null)
+                    PowerFactorWarning(this, new SampleEventArgs(sample.vehicleId, sample.RowIndex, $"Power Factor warning detected PF={pf}"));
+            }
         }
 
     }

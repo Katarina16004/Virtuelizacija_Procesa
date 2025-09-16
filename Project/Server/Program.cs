@@ -23,7 +23,7 @@ namespace Server
 
             SessionService.VoltageSpike += listener.OnSampleEvent;
             SessionService.CurrentSpike += listener.OnSampleEvent;
-
+            SessionService.PowerFactorWarning += listener.OnSampleEvent;
 
             Console.WriteLine("Welcome to Server!");
             host.Open();

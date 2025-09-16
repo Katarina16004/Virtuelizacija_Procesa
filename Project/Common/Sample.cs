@@ -147,10 +147,10 @@ namespace Common
                 return or;
             }
 
-            if (!DateTime.TryParseExact(parametrs[0], "yyyy/MM/dd HH:mm:ss",
+            if (!DateTime.TryParseExact(parametrs[0], "yyyy-MM-dd HH:mm:ss",
                  CultureInfo.InvariantCulture, DateTimeStyles.None, out _))
             {
-                or.ResultMessage = "Greska sa formatom datuma i vremena (potrebno je da bude u fomratu yyyy/MM/dd HH:mm:ss !";
+                or.ResultMessage = "Greska sa formatom datuma i vremena (potrebno je da bude u fomratu yyyy-MM-dd HH:mm:ss !";
                 or.ResultType = ResultType.Failed;
                 return or;
             }

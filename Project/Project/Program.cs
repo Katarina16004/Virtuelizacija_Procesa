@@ -33,7 +33,7 @@ namespace Project
                 if(selected_vehicle == 12)
                 {
                     Console.WriteLine("Program closed!");
-                    Logger.Dispose();
+                  
                     break;
                 } 
 

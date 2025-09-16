@@ -65,7 +65,7 @@ namespace Server
                 }
 
                 var result = Sample.validateSample(
-                    sample.Timestamp.ToString("yyyy/MM/dd hh:mm:ss"),
+                    sample.Timestamp.ToString("yyyy-MM-dd hh:mm:ss"),
                     sample.Voltage_RMS_Min.ToString(),
                     sample.Voltage_RMS_Avg.ToString(),
                     sample.Voltage_RMS_Max.ToString(),

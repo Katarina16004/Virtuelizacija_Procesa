@@ -25,6 +25,7 @@ namespace Server
             host.Open();
             Console.ReadKey();
             host.Close();
+            Logger.Dispose();
         }
     }
 }

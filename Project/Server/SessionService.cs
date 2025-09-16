@@ -40,7 +40,7 @@ namespace Server
             }
             Console.WriteLine("Transfer finished!");
             if (OnTransferCompleted != null)
-                OnTransferCompleted(this, new SampleEventArgs(vehicleID, 0, "Transfer started"));
+                OnTransferCompleted(this, new SampleEventArgs(vehicleID, 0, "Transfer finished"));
         }
 
         public OperationResult PushSample(Sample sample)
@@ -138,7 +138,7 @@ namespace Server
                     or.ResultMessage = "Transfer Started!";
 
                     if (OnTransferStarted != null)
-                        OnTransferStarted(this, new SampleEventArgs(vehicleID, 0, "Transfer finished"));
+                        OnTransferStarted(this, new SampleEventArgs(vehicleID, 0, "Transfer started"));
 
                     return or;
                 }

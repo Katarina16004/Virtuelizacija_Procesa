@@ -106,6 +106,9 @@ namespace Server
                     previousSample = sample;
                     AnalyzePowerFactor(sample);
 
+                    or.ResultMessage = "Sample added successfully!";
+                    or.ResultType = ResultType.Success;
+
                     if (OnSampleReceived != null)
                         OnSampleReceived(this, new SampleEventArgs(sample.vehicleId, sample.RowIndex, "Sample received"));
 
@@ -115,6 +118,8 @@ namespace Server
                     rejected.WriteLine($"Invalid sample: {sample.ToString()}");
                     rejected.WriteLine($"Reason: {result.ResultMessage}");
                     rejected.Flush();
+                    or.ResultType = ResultType.Failed;
+                    or.ResultMessage = result.ResultMessage;
 
                     if (OnWarningRaised != null)
                         OnWarningRaised(this, new SampleEventArgs(sample.vehicleId, sample.RowIndex, "Sample rejected"));
@@ -127,8 +132,6 @@ namespace Server
                 return or;
             }
             
-            or.ResultMessage = "Sample added successfully!";
-            or.ResultType = ResultType.Success;
             return or;
         }
 
@@ -152,6 +155,7 @@ namespace Server
                 {
                     or.ResultType = ResultType.Success;
                     or.ResultMessage = "Transfer Started!";
+                    Console.WriteLine("Transfer Started!");
 
                     if (OnTransferStarted != null)
                         OnTransferStarted(this, new SampleEventArgs(vehicleID, 0, "Transfer started"));

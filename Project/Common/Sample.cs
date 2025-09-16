@@ -142,7 +142,7 @@ namespace Common
             OperationResult or = new OperationResult();
             if(parametrs.Length != 19)
             {
-                or.ResultMessage = "Greska sa brojem prosledjenih parametara!";
+                or.ResultMessage = "Error with the number of passed parameters!";
                 or.ResultType = ResultType.Failed;
                 return or;
             }
@@ -150,7 +150,7 @@ namespace Common
             if (!DateTime.TryParseExact(parametrs[0], "yyyy-MM-dd HH:mm:ss",
                  CultureInfo.InvariantCulture, DateTimeStyles.None, out _))
             {
-                or.ResultMessage = "Greska sa formatom datuma i vremena (potrebno je da bude u fomratu yyyy-MM-dd HH:mm:ss !";
+                or.ResultMessage = "Error with the date and time format (it must be in the format yyyy-MM-dd HH:mm:ss)!";
                 or.ResultType = ResultType.Failed;
                 return or;
             }
@@ -160,7 +160,7 @@ namespace Common
             {
                 if (!CheckNumber(parametrs[i], MustBePositiveNumber[i-1]))
                 {
-                    or.ResultMessage = "Greska prilikom validacije vrednosti!: "+ parametrs[i];
+                    or.ResultMessage = "Error during value validation!: " + parametrs[i];
                     or.ResultType = ResultType.Failed;
                     return or;
                 }

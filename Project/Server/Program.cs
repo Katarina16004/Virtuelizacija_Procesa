@@ -21,6 +21,10 @@ namespace Server
             SessionService.OnTransferCompleted += listener.OnSampleEvent;
             SessionService.OnWarningRaised += listener.OnSampleEvent;
 
+            SessionService.VoltageSpike += listener.OnSampleEvent;
+            SessionService.CurrentSpike += listener.OnSampleEvent;
+
+
             Console.WriteLine("Welcome to Server!");
             host.Open();
             Console.ReadKey();

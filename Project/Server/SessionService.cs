@@ -5,6 +5,7 @@ using System.Configuration;
 using System.IO;
 using System.IO.Pipes;
 using System.Linq;
+using System.ServiceModel;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -65,17 +66,19 @@ namespace Server
 
                 if (path == null || path == "")
                 {
-                    Console.WriteLine("You must Start session first!");
-                    or.ResultType = ResultType.Failed;
+                    throw new FaultException<CustomException>(
+                        new CustomException("You must Start session first!"),
+                        new FaultReason("Session not started")
+                    );
                 }
 
                 
                 if(sw == null || rejected == null)
                 {
-                    Console.WriteLine("Problem with initialization!");
-                    or.ResultType = ResultType.Failed;
-                    or.ResultMessage = "Problem with initialization!";
-                    return or;
+                    throw new FaultException<CustomException>(
+                        new CustomException("Problem with initialization!"),
+                        new FaultReason("Initialization problem")
+                    );
                 }
 
                 var result = Sample.validateSample(
@@ -121,6 +124,7 @@ namespace Server
                     if (OnSampleReceived != null)
                         OnSampleReceived(this, new SampleEventArgs(sample.vehicleId, sample.RowIndex, "Sample received"));
 
+                    return or;
                 }
                 else
                 {
@@ -133,16 +137,16 @@ namespace Server
 
                     if (OnWarningRaised != null)
                         OnWarningRaised(this, new SampleEventArgs(sample.vehicleId, sample.RowIndex, "Sample rejected"));
+                    return or;
                 }
             }
             catch (Exception ex)
             {
-                or.ResultType = ResultType.Failed;
-                or.ResultMessage = "Error while pushing sample!" + ex.Message;
-                return or;
-            }
-            
-            return or;
+                throw new FaultException<CustomException>(
+                    new CustomException($"Error while pushing sample: {ex.Message}"),
+                    new FaultReason("Push sample failed")
+                );
+            }            
         }
 
         public OperationResult StartSession(int vehicleId)
@@ -173,14 +177,17 @@ namespace Server
                     return or;
                 }
 
-                or.ResultType = ResultType.Failed;
-                or.ResultMessage = "Problem while creating file!";
-                return or;
+                throw new FaultException<CustomException>(
+                    new CustomException("Problem while creating file!"),
+                    new FaultReason("Problem while creating file!")
+                );
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                OperationResult or = new OperationResult(ResultType.Failed, ex.Message);
-                return or;
+                throw new FaultException<CustomException>(
+                        new CustomException("Problem while creating file!"),
+                        new FaultReason("Problem while creating file!")
+                );
             }
             
         }

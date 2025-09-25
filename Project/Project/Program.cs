@@ -38,14 +38,24 @@ namespace Project
                 } 
 
                 service = factory.CreateChannel();
+
+
+                try
+                {
+                    OperationResult result = service.StartSession(selected_vehicle);
+                    Console.WriteLine($"SUCCESS: {result.ResultMessage}");
+
+                    SendSamples(selected_vehicle);
+
+                    service.EndSession();
+
+                }
+                catch (FaultException<CustomException> ex)
+                {
+                    Console.WriteLine($"ERROR: {ex.Detail.Message}");
+                }
+
                 
-
-                OperationResult or = service.StartSession(selected_vehicle);
-                Console.WriteLine(or.ResultMessage);
-
-                SendSamples(selected_vehicle);
-
-                service.EndSession();
             }
             while (selected_vehicle != 12);
 
@@ -138,23 +148,31 @@ namespace Project
                             {
                                 Console.WriteLine($"Invalid number at line {rowIndex}, column {i}: {fields[i]}");
                                 valid = false;
-                                rowIndex--;
+                                
                                 Logger.Log(line);
                                 break;
                             }
                         }
 
-                        if (!valid) continue;
+                        if (!valid)
+                            continue;
 
 
                         Sample sample = new Sample(selected_vehicle, rowIndex, fields[0], fields[1], fields[2], fields[3], fields[4], fields[5], fields[6],
                             fields[7], fields[8], fields[9], fields[10], fields[11], fields[12], fields[13], fields[14], fields[15], fields[16], fields[17], fields[18]);
 
-                        var result = service.PushSample(sample);
-
-                        if (result.ResultType == ResultType.Failed)
+                        try
                         {
-                            Console.WriteLine($"Server rejected line {rowIndex}: {result.ResultMessage}");
+                            var result = service.PushSample(sample);
+
+                            if (result.ResultType == ResultType.Failed)
+                            {
+                                Console.WriteLine($"Server rejected line {rowIndex}: {result.ResultMessage}");
+                            }
+                        }
+                        catch (FaultException<CustomException> ex)
+                        {
+                            Console.WriteLine($"ERROR pushing sample at line {rowIndex}: {ex.Detail.Message}");
                         }
                     }
                 }

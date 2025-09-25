@@ -12,6 +12,7 @@ namespace Common
     public interface ISessionService
     {
         [OperationContract]
+        [FaultContract(typeof(CustomException))]
         OperationResult StartSession(int vehicleID);
         
         [OperationContract]

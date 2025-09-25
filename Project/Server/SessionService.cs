@@ -50,9 +50,16 @@ namespace Server
                 OnTransferCompleted(this, new SampleEventArgs(vehicleID, 0, "Transfer finished"));
         }
 
+        public void PushSampleHeaders(string line)
+        {
+            sw.WriteLine(line);
+            rejected.WriteLine(line);
+        }
+
         public OperationResult PushSample(Sample sample)
         {
            OperationResult or = new OperationResult();
+            int rejectedRowNum = 0;
             try
             {
 
@@ -95,6 +102,8 @@ namespace Server
 
                 if (result.ResultType == ResultType.Success)
                 {
+                    int temp = sample.RowIndex;
+                    sample.RowIndex = temp - rejectedRowNum;
                     sw.WriteLine(sample.ToString());
                     sw.Flush();
 
@@ -115,6 +124,7 @@ namespace Server
                 }
                 else
                 {
+                    sample.RowIndex = ++rejectedRowNum;
                     rejected.WriteLine($"Invalid sample: {sample.ToString()}");
                     rejected.WriteLine($"Reason: {result.ResultMessage}");
                     rejected.Flush();

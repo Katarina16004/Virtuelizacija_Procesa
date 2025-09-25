@@ -17,7 +17,10 @@ namespace Common
         [OperationContract]
         [FaultContract(typeof(CustomException))]
         OperationResult PushSample(Sample sample);
-        
+
+        [OperationContract]
+        void PushSampleHeaders(string header);
+
         [OperationContract]
         void EndSession();
     }

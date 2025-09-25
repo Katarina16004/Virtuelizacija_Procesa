@@ -117,12 +117,19 @@ namespace Project
                 {
                     string line;
                     int rowIndex = 0;
+                    bool first = true;
 
                     while ((line = sr.ReadLine()) != null)
                     {
                         rowIndex++;
                         var fields = line.Split(',');
-
+                        if (first == true)
+                        {
+                            service.PushSampleHeaders(line);
+                            first = false;
+                            rowIndex--;
+                            continue;
+                        }
 
                         bool valid = true;
                         for (int i = 1; i < fields.Length; i++)
@@ -131,6 +138,7 @@ namespace Project
                             {
                                 Console.WriteLine($"Invalid number at line {rowIndex}, column {i}: {fields[i]}");
                                 valid = false;
+                                rowIndex--;
                                 Logger.Log(line);
                                 break;
                             }

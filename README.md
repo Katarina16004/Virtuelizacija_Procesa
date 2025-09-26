@@ -71,8 +71,3 @@ Contains charging profiles for 12 different vehicle models with comprehensive te
 - **Status Monitoring**: Real-time transfer progress indication
 - **Fault Tolerance**: Graceful error handling and recovery
 - **Connection Management**: Automatic resource cleanup
-
----
-
-**⚡ Empowering Electric Vehicle Infrastructure Through Data Analytics**  
-*Developed for FTN Process Virtualization Course*
